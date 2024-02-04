@@ -1,0 +1,21 @@
+name: Simple Deployment
+on:
+  push:
+    tags:
+      - 'v*'
+    
+jobs:
+  Deploy_To_Git_Release:
+    name: Release to Git for Deployment
+    runs-on: Ubuntu-latest
+    steps:
+    - name: Set environment version
+      run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+    - name: create a release
+      id: create-new-release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+      with:
+        tag_name: ${{ env.RELEASE_VERSION }}
+        release_name: Release ${{env.RELEASE_VERSION }}
